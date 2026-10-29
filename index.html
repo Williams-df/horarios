@@ -4,172 +4,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rotación de Horarios - Equipo</title>
+    <title>Control de Horarios Rotativos</title>
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --home-office: #d0e1fd;
-            --presencial: #fcd5ce;
-            --home-office-text: #1b4f72;
-            --presencial-text: #922b21;
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-color: #333333;
-            --border-color: #dee2e6;
+            /* Paleta Darkmode basada en la plataforma */
+            --bg-color: #111625;
+            --sidebar-bg: #1a2238;
+            --card-bg: #1e2942;
+            --card-border: #2e3c5d;
+            --text-main: #f0f4f8;
+            --text-muted: #94a3b8;
+            --accent-yellow: #f5a623;
+            --accent-yellow-hover: #e09212;
+
+            /* Colores de Badges para Dark Mode */
+            --home-office-bg: #1e3a5f;
+            --home-office-text: #60a5fa;
+            --home-office-border: #2563eb;
+
+            --presencial-bg: #4a1d33;
+            --presencial-text: #f472b6;
+            --presencial-border: #db2777;
+
+            --today-highlight: rgba(245, 166, 35, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 30px 15px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
         }
 
         .container {
             width: 100%;
-            max-width: 1000px;
+            max-width: 1100px;
             background: var(--card-bg);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
         }
 
         header {
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
             margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--card-border);
+            flex-wrap: wrap;
         }
 
-        h1 {
-            margin: 0 0 10px 0;
-            color: var(--primary-color);
-            font-size: 1.8rem;
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Espacio para subir logo.png al repo */
+        .logo-img {
+            max-height: 48px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .title-group h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+
+        .title-group p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-top: 2px;
         }
 
         .week-banner {
-            background: #eaf2f8;
-            border-left: 5px solid var(--secondary-color);
-            padding: 12px 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-            text-align: left;
+            background: rgba(245, 166, 35, 0.08);
+            border: 1px solid rgba(245, 166, 35, 0.25);
+            border-left: 4px solid var(--accent-yellow);
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 0.92rem;
+            color: #ffead0;
+            line-height: 1.5;
         }
 
         .controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
             margin-bottom: 25px;
-            justify-content: space-between;
-            align-items: center;
         }
 
         .control-group {
             display: flex;
             flex-direction: column;
-            gap: 5px;
-            flex: 1;
-            min-width: 220px;
+            gap: 8px;
         }
 
         label {
             font-weight: 600;
-            font-size: 0.85rem;
-            color: #555;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
         }
 
         select,
         input {
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
+            background-color: var(--sidebar-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 12px 14px;
+            border-radius: 8px;
             font-size: 0.95rem;
             outline: none;
-            transition: border-color 0.2s;
+            transition: all 0.2s ease;
         }
 
         select:focus,
         input:focus {
-            border-color: var(--secondary-color);
+            border-color: var(--accent-yellow);
+            box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.15);
         }
 
         .table-responsive {
             overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid var(--card-border);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            margin-bottom: 15px;
+            background-color: var(--sidebar-bg);
         }
 
         th,
         td {
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--border-color);
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--card-border);
             font-size: 0.9rem;
         }
 
         th {
-            background-color: #f1f3f5;
-            color: var(--primary-color);
+            background-color: #151d30;
+            color: var(--text-muted);
             font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
         }
 
         /* Estilos de turnos */
         .badge {
             display: inline-block;
-            padding: 6px 10px;
-            border-radius: 4px;
-            font-weight: 500;
-            font-size: 0.85rem;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.8rem;
             text-align: center;
             width: 100%;
             box-sizing: border-box;
+            border: 1px solid transparent;
         }
 
         .home-office {
-            background-color: var(--home-office);
+            background-color: var(--home-office-bg);
             color: var(--home-office-text);
+            border-color: var(--home-office-border);
         }
 
         .presencial {
-            background-color: var(--presencial);
+            background-color: var(--presencial-bg);
             color: var(--presencial-text);
+            border-color: var(--presencial-border);
         }
 
         .today-col {
-            background-color: rgba(52, 152, 219, 0.05);
-            border-left: 2px dashed var(--secondary-color);
-            border-right: 2px dashed var(--secondary-color);
+            background-color: var(--today-highlight) !important;
+        }
+
+        th.today-col {
+            color: var(--accent-yellow);
+            border-bottom: 2px solid var(--accent-yellow);
         }
 
         tfoot td {
-            font-weight: bold;
-            background-color: #f8f9fa;
+            font-weight: 700;
+            background-color: #141b2d;
+            color: var(--accent-yellow);
         }
 
         footer {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 25px;
             font-size: 0.8rem;
-            color: #888;
+            color: var(--text-muted);
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 640px) {
             .container {
-                padding: 15px;
+                padding: 18px;
             }
 
-            th,
-            td {
-                padding: 8px 10px;
+            header {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
     </style>
@@ -179,17 +236,23 @@
 
     <div class="container">
         <header>
-            <h1>📅 Horarios Rotativos del Equipo</h1>
-            <p>Visualiza los turnos presenciales y de home office de la semana</p>
+            <div class="brand-section">
+                <!-- Sube tu logo como logo.png en la raíz del repo -->
+                <img src="logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+                <div class="title-group">
+                    <h1>Horarios Rotativos</h1>
+                    <p>Módulo de Consulta de Turnos Semanales</p>
+                </div>
+            </div>
         </header>
 
         <div id="weekBanner" class="week-banner">
-            Calculando semana actual...
+            Calculando semana en curso...
         </div>
 
         <div class="controls">
             <div class="control-group">
-                <label for="weekSelect">Seleccionar Semana:</label>
+                <label for="weekSelect">Semana de Consulta</label>
                 <select id="weekSelect" onchange="updateView()">
                     <option value="1">Semana 1</option>
                     <option value="2">Semana 2</option>
@@ -199,7 +262,7 @@
             </div>
 
             <div class="control-group">
-                <label for="nameFilter">Filtrar por Colaborador:</label>
+                <label for="nameFilter">Buscar Colaborador</label>
                 <select id="nameFilter" onchange="updateView()">
                     <option value="">Todos los colaboradores</option>
                 </select>
@@ -219,7 +282,7 @@
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    <!-- Los datos se inyectarán mediante JavaScript -->
+                    <!-- Filas inyectadas dinámicamente -->
                 </tbody>
                 <tfoot>
                     <tr id="tableFooter">
@@ -235,14 +298,14 @@
         </div>
 
         <footer>
-            Actualizado automáticamente para GitHub Pages • Sistema de Horarios Internos
+            Sistema Interno • Control de Turnos en GitHub Pages
         </footer>
     </div>
 
     <script>
-        // Datos de los horarios extraídos de la planificación del equipo
+        // Mapeo corregido desde la hoja 'HorariosFinales'
         const schedules = {
-            1: [
+            "1": [
                 {name: "Daniel Jimenez", days: ["Home Office", "Home Office", "Presencial", "Home Office", "Presencial"]},
                 {name: "Diego", days: ["Home Office", "Presencial", "Presencial", "Presencial", "Presencial"]},
                 {name: "Carlos", days: ["Home Office", "Presencial", "Presencial", "Presencial", "Home Office"]},
@@ -250,30 +313,30 @@
                 {name: "Joshua", days: ["Home Office", "Presencial", "Presencial", "Home Office", "Presencial"]},
                 {name: "Julio", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Presencial"]},
                 {name: "Pablo", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"]},
-                {name: "Ramiro", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"]},
+                {name: "Ramiro", days: ["Presencial", "Home Office", "Presencial", "Home Office", "Home Office"]},
                 {name: "Josue", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Presencial"]},
                 {name: "Chan", days: ["Presencial", "Presencial", "Presencial", "Presencial", "Home Office"]},
-                {name: "Alex", days: ["Presencial", "Home Office", "Presencial", "Presencial", "Home Office"]}
+                {name: "Alex", days: ["Presencial", "Home Office", "Presencial", "Home Office", "Home Office"]}
             ],
-            2: [
+            "2": [
                 {name: "Daniel Jimenez", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Presencial"]},
-                {name: "Diego", days: ["Home Office", "Presencial", "Presencial", "Home Office", "Presencial"]},
+                {name: "Diego", days: ["Home Office", "Home Office", "Presencial", "Home Office", "Presencial"]},
                 {name: "Carlos", days: ["Home Office", "Presencial", "Presencial", "Home Office", "Home Office"]},
                 {name: "Williams", days: ["Home Office", "Presencial", "Presencial", "Presencial", "Home Office"]},
                 {name: "Joshua", days: ["Home Office", "Presencial", "Presencial", "Home Office", "Presencial"]},
                 {name: "Julio", days: ["Home Office", "Home Office", "Presencial", "Home Office", "Presencial"]},
                 {name: "Pablo", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"]},
                 {name: "Ramiro", days: ["Presencial", "Presencial", "Presencial", "Presencial", "Home Office"]},
-                {name: "Josue", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Presencial"]},
+                {name: "Josue", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Home Office"]},
                 {name: "Chan", days: ["Presencial", "Home Office", "Presencial", "Presencial", "Home Office"]},
                 {name: "Alex", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"]}
             ],
-            3: [
+            "3": [
                 {name: "Daniel Jimenez", days: ["Presencial", "Home Office", "Presencial", "Home Office", "Home Office"]},
-                {name: "Diego", days: ["Presencial", "Presencial", "Presencial", "Presencial", "Presencial"]},
-                {name: "Carlos", days: ["Home Office", "Presencial", "Presencial", "Presencial", "Presencial"]},
-                {name: "Williams", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Presencial"]},
-                {name: "Joshua", days: ["Home Office", "Presencial", "Presencial", "Home Office", "Home Office"]},
+                {name: "Diego", days: ["Presencial", "Presencial", "Presencial", "Presencial", "Home Office"]},
+                {name: "Carlos", days: ["Home Office", "Presencial", "Presencial", "Presencial", "Home Office"]},
+                {name: "Williams", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Home Office"]},
+                {name: "Joshua", days: ["Home Office", "Presencial", "Presencial", "Home Office", "Presencial"]},
                 {name: "Julio", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"]},
                 {name: "Pablo", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"]},
                 {name: "Ramiro", days: ["Home Office", "Home Office", "Presencial", "Home Office", "Presencial"]},
@@ -281,11 +344,11 @@
                 {name: "Chan", days: ["Presencial", "Home Office", "Presencial", "Presencial", "Presencial"]},
                 {name: "Alex", days: ["Home Office", "Home Office", "Presencial", "Home Office", "Presencial"]}
             ],
-            4: [
+            "4": [
                 {name: "Daniel Jimenez", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"]},
                 {name: "Diego", days: ["Presencial", "Home Office", "Presencial", "Home Office", "Home Office"]},
-                {name: "Carlos", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Presencial"]},
-                {name: "Williams", days: ["Home Office", "Presencial", "Presencial", "Presencial", "Presencial"]},
+                {name: "Carlos", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Home Office"]},
+                {name: "Williams", days: ["Home Office", "Presencial", "Presencial", "Presencial", "Home Office"]},
                 {name: "Joshua", days: ["Home Office", "Presencial", "Presencial", "Home Office", "Presencial"]},
                 {name: "Julio", days: ["Presencial", "Home Office", "Presencial", "Home Office", "Home Office"]},
                 {name: "Pablo", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"]},
@@ -296,31 +359,25 @@
             ]
         };
 
-        // Lógica para calcular la semana actual automáticamente basada en una fecha de anclaje
         function calculateCurrentWeek() {
-            // Fecha ancla conocida: Supongamos que hoy (octubre de 2026) estamos en la Semana 3.
-            // Usaremos una fecha base de referencia para calcular las diferencias de semanas de forma cíclica (1 al 4).
-            const baseDate = new Date(2026, 9, 5); // Un lunes de referencia en Semana 3
+            // Fecha ancla: Semana 3
+            const baseDate = new Date(2026, 9, 26); // Lunes de Semana 3
             const today = new Date();
 
-            // Diferencia en semanas enteras
             const diffTime = today - baseDate;
             const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
 
-            // Calcular semana cíclica (1, 2, 3, 4) sabiendo que la base es Semana 3
             let currentWeek = ((3 + diffWeeks - 1) % 4) + 1;
             if (currentWeek <= 0) currentWeek += 4;
 
-            // Calcular qué semana tocará el próximo lunes
             let nextWeek = (currentWeek % 4) + 1;
 
             return {currentWeek, nextWeek};
         }
 
         function init() {
-            // Poblar el selector de nombres con los colaboradores ordenados alfabéticamente
             const nameFilter = document.getElementById('nameFilter');
-            const uniqueNames = schedules[1].map(item => item.name).sort();
+            const uniqueNames = schedules["1"].map(item => item.name).sort();
 
             uniqueNames.forEach(name => {
                 const option = document.createElement('option');
@@ -329,13 +386,11 @@
                 nameFilter.appendChild(option);
             });
 
-            // Establecer la semana actual calculada automáticamente
             const {currentWeek, nextWeek} = calculateCurrentWeek();
             document.getElementById('weekSelect').value = currentWeek;
 
-            // Mostrar banner informativo
             const banner = document.getElementById('weekBanner');
-            banner.innerHTML = `📍 Actualmente te encuentras en la <strong>Semana ${currentWeek}</strong>. El próximo lunes el sistema cambiará automáticamente a la <strong>Semana ${nextWeek}</strong>.`;
+            banner.innerHTML = `📌 <strong>Semana Activa:</strong> Actualmente estás viendo la <strong>Semana ${currentWeek}</strong>. El próximo lunes el sistema avanzará automáticamente a la <strong>Semana ${nextWeek}</strong>.`;
 
             highlightTodayColumn();
             updateView();
@@ -344,7 +399,8 @@
         function highlightTodayColumn() {
             const jsDay = new Date().getDay(); // 1 = Lunes, ..., 5 = Viernes
             if (jsDay >= 1 && jsDay <= 5) {
-                document.getElementById(`th-${jsDay}`).classList.add('today-col');
+                const th = document.getElementById(`th-${jsDay}`);
+                if (th) th.classList.add('today-col');
             }
         }
 
@@ -355,14 +411,12 @@
 
             tbody.innerHTML = '';
 
-            let data = schedules[selectedWeek];
+            let data = schedules[selectedWeek] || [];
 
-            // Filtrar por nombre si se seleccionó uno
             if (selectedName) {
                 data = data.filter(item => item.name === selectedName);
             }
 
-            // Totales presenciales por día
             let totals = [0, 0, 0, 0, 0];
 
             data.forEach(person => {
@@ -386,7 +440,6 @@
                 tbody.appendChild(tr);
             });
 
-            // Actualizar fila de totales
             for (let i = 0; i < 5; i++) {
                 document.getElementById(`tot-${i + 1}`).textContent = totals[i];
             }
