@@ -170,6 +170,27 @@
             font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 0.6px;
+            text-align: center;
+        }
+
+        th:first-child,
+        td:first-child {
+            text-align: left;
+        }
+
+        .day-title {
+            display: block;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .date-subtitle {
+            display: block;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+            font-weight: normal;
+            text-transform: lowercase;
         }
 
         /* Estilos de turnos */
@@ -201,8 +222,11 @@
             background-color: var(--today-highlight) !important;
         }
 
-        th.today-col {
+        th.today-col .day-title {
             color: var(--accent-yellow);
+        }
+
+        th.today-col {
             border-bottom: 2px solid var(--accent-yellow);
         }
 
@@ -210,6 +234,11 @@
             font-weight: 700;
             background-color: #141b2d;
             color: var(--accent-yellow);
+            text-align: center;
+        }
+
+        tfoot td:first-child {
+            text-align: left;
         }
 
         footer {
@@ -253,7 +282,7 @@
         <div class="controls">
             <div class="control-group">
                 <label for="weekSelect">Semana de Consulta</label>
-                <select id="weekSelect" onchange="updateView()">
+                <select id="weekSelect" onchange="onWeekChange()">
                     <option value="1">Semana 1</option>
                     <option value="2">Semana 2</option>
                     <option value="3">Semana 3</option>
@@ -274,11 +303,16 @@
                 <thead>
                     <tr id="tableHeaderRow">
                         <th>Colaborador</th>
-                        <th id="th-1">Lunes</th>
-                        <th id="th-2">Martes</th>
-                        <th id="th-3">Miércoles</th>
-                        <th id="th-4">Jueves</th>
-                        <th id="th-5">Viernes</th>
+                        <th id="th-1"><span class="day-title">Lunes</span><span class="date-subtitle"
+                                id="date-1">--</span></th>
+                        <th id="th-2"><span class="day-title">Martes</span><span class="date-subtitle"
+                                id="date-2">--</span></th>
+                        <th id="th-3"><span class="day-title">Miércoles</span><span class="date-subtitle"
+                                id="date-3">--</span></th>
+                        <th id="th-4"><span class="day-title">Jueves</span><span class="date-subtitle"
+                                id="date-4">--</span></th>
+                        <th id="th-5"><span class="day-title">Viernes</span><span class="date-subtitle"
+                                id="date-5">--</span></th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -306,73 +340,110 @@
         // Mapeo corregido desde la hoja 'HorariosFinales'
         const schedules = {
             "1": [
-                {name: "Daniel Jimenez", days: ["Home Office", "Home Office", "Presencial", "Home Office", "Presencial"]},
-                {name: "Diego", days: ["Home Office", "Presencial", "Presencial", "Presencial", "Presencial"]},
-                {name: "Carlos", days: ["Home Office", "Presencial", "Presencial", "Presencial", "Home Office"]},
-                {name: "Williams", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Home Office"]},
-                {name: "Joshua", days: ["Home Office", "Presencial", "Presencial", "Home Office", "Presencial"]},
-                {name: "Julio", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Presencial"]},
-                {name: "Pablo", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"]},
-                {name: "Ramiro", days: ["Presencial", "Home Office", "Presencial", "Home Office", "Home Office"]},
-                {name: "Josue", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Presencial"]},
-                {name: "Chan", days: ["Presencial", "Presencial", "Presencial", "Presencial", "Home Office"]},
-                {name: "Alex", days: ["Presencial", "Home Office", "Presencial", "Home Office", "Home Office"]}
+                { name: "Daniel Jimenez", days: ["Home Office", "Home Office", "Presencial", "Home Office", "Presencial"] },
+                { name: "Diego", days: ["Home Office", "Presencial", "Presencial", "Presencial", "Presencial"] },
+                { name: "Carlos", days: ["Home Office", "Presencial", "Presencial", "Presencial", "Home Office"] },
+                { name: "Williams", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Home Office"] },
+                { name: "Joshua", days: ["Home Office", "Presencial", "Presencial", "Home Office", "Presencial"] },
+                { name: "Julio", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Presencial"] },
+                { name: "Pablo", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"] },
+                { name: "Ramiro", days: ["Presencial", "Home Office", "Presencial", "Home Office", "Home Office"] },
+                { name: "Josue", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Presencial"] },
+                { name: "Chan", days: ["Presencial", "Presencial", "Presencial", "Presencial", "Home Office"] },
+                { name: "Alex", days: ["Presencial", "Home Office", "Presencial", "Home Office", "Home Office"] }
             ],
             "2": [
-                {name: "Daniel Jimenez", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Presencial"]},
-                {name: "Diego", days: ["Home Office", "Home Office", "Presencial", "Home Office", "Presencial"]},
-                {name: "Carlos", days: ["Home Office", "Presencial", "Presencial", "Home Office", "Home Office"]},
-                {name: "Williams", days: ["Home Office", "Presencial", "Presencial", "Presencial", "Home Office"]},
-                {name: "Joshua", days: ["Home Office", "Presencial", "Presencial", "Home Office", "Presencial"]},
-                {name: "Julio", days: ["Home Office", "Home Office", "Presencial", "Home Office", "Presencial"]},
-                {name: "Pablo", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"]},
-                {name: "Ramiro", days: ["Presencial", "Presencial", "Presencial", "Presencial", "Home Office"]},
-                {name: "Josue", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Home Office"]},
-                {name: "Chan", days: ["Presencial", "Home Office", "Presencial", "Presencial", "Home Office"]},
-                {name: "Alex", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"]}
+                { name: "Daniel Jimenez", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Presencial"] },
+                { name: "Diego", days: ["Home Office", "Home Office", "Presencial", "Home Office", "Presencial"] },
+                { name: "Carlos", days: ["Home Office", "Presencial", "Presencial", "Home Office", "Home Office"] },
+                { name: "Williams", days: ["Home Office", "Presencial", "Presencial", "Presencial", "Home Office"] },
+                { name: "Joshua", days: ["Home Office", "Presencial", "Presencial", "Home Office", "Presencial"] },
+                { name: "Julio", days: ["Home Office", "Home Office", "Presencial", "Home Office", "Presencial"] },
+                { name: "Pablo", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"] },
+                { name: "Ramiro", days: ["Presencial", "Presencial", "Presencial", "Presencial", "Home Office"] },
+                { name: "Josue", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Home Office"] },
+                { name: "Chan", days: ["Presencial", "Home Office", "Presencial", "Presencial", "Home Office"] },
+                { name: "Alex", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"] }
             ],
             "3": [
-                {name: "Daniel Jimenez", days: ["Presencial", "Home Office", "Presencial", "Home Office", "Home Office"]},
-                {name: "Diego", days: ["Presencial", "Presencial", "Presencial", "Presencial", "Home Office"]},
-                {name: "Carlos", days: ["Home Office", "Presencial", "Presencial", "Presencial", "Home Office"]},
-                {name: "Williams", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Home Office"]},
-                {name: "Joshua", days: ["Home Office", "Presencial", "Presencial", "Home Office", "Presencial"]},
-                {name: "Julio", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"]},
-                {name: "Pablo", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"]},
-                {name: "Ramiro", days: ["Home Office", "Home Office", "Presencial", "Home Office", "Presencial"]},
-                {name: "Josue", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Presencial"]},
-                {name: "Chan", days: ["Presencial", "Home Office", "Presencial", "Presencial", "Presencial"]},
-                {name: "Alex", days: ["Home Office", "Home Office", "Presencial", "Home Office", "Presencial"]}
+                { name: "Daniel Jimenez", days: ["Presencial", "Home Office", "Presencial", "Home Office", "Home Office"] },
+                { name: "Diego", days: ["Presencial", "Presencial", "Presencial", "Presencial", "Home Office"] },
+                { name: "Carlos", days: ["Home Office", "Presencial", "Presencial", "Presencial", "Home Office"] },
+                { name: "Williams", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Home Office"] },
+                { name: "Joshua", days: ["Home Office", "Presencial", "Presencial", "Home Office", "Presencial"] },
+                { name: "Julio", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"] },
+                { name: "Pablo", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"] },
+                { name: "Ramiro", days: ["Home Office", "Home Office", "Presencial", "Home Office", "Presencial"] },
+                { name: "Josue", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Presencial"] },
+                { name: "Chan", days: ["Presencial", "Home Office", "Presencial", "Presencial", "Presencial"] },
+                { name: "Alex", days: ["Home Office", "Home Office", "Presencial", "Home Office", "Presencial"] }
             ],
             "4": [
-                {name: "Daniel Jimenez", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"]},
-                {name: "Diego", days: ["Presencial", "Home Office", "Presencial", "Home Office", "Home Office"]},
-                {name: "Carlos", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Home Office"]},
-                {name: "Williams", days: ["Home Office", "Presencial", "Presencial", "Presencial", "Home Office"]},
-                {name: "Joshua", days: ["Home Office", "Presencial", "Presencial", "Home Office", "Presencial"]},
-                {name: "Julio", days: ["Presencial", "Home Office", "Presencial", "Home Office", "Home Office"]},
-                {name: "Pablo", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"]},
-                {name: "Ramiro", days: ["Home Office", "Presencial", "Presencial", "Presencial", "Presencial"]},
-                {name: "Josue", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Home Office"]},
-                {name: "Chan", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"]},
-                {name: "Alex", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Presencial"]}
+                { name: "Daniel Jimenez", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"] },
+                { name: "Diego", days: ["Presencial", "Home Office", "Presencial", "Home Office", "Home Office"] },
+                { name: "Carlos", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Home Office"] },
+                { name: "Williams", days: ["Home Office", "Presencial", "Presencial", "Presencial", "Home Office"] },
+                { name: "Joshua", days: ["Home Office", "Presencial", "Presencial", "Home Office", "Presencial"] },
+                { name: "Julio", days: ["Presencial", "Home Office", "Presencial", "Home Office", "Home Office"] },
+                { name: "Pablo", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"] },
+                { name: "Ramiro", days: ["Home Office", "Presencial", "Presencial", "Presencial", "Presencial"] },
+                { name: "Josue", days: ["Home Office", "Presencial", "Presencial", "Presencial", "Home Office"] },
+                { name: "Chan", days: ["Presencial", "Presencial", "Presencial", "Home Office", "Home Office"] },
+                { name: "Alex", days: ["Home Office", "Home Office", "Presencial", "Presencial", "Presencial"] }
             ]
         };
 
+        const anchorDate = new Date(2026, 9, 26);
+        const anchorWeek = 3;
+
+        function getMondayOfCurrentRealWeek() {
+            const now = new Date();
+            const day = now.getDay();
+            const diff = now.getDate() - day + (day === 0 ? -6 : 1);
+            const monday = new Date(now.setDate(diff));
+            monday.setHours(0, 0, 0, 0);
+            return monday;
+        }
+
         function calculateCurrentWeek() {
-            // Fecha ancla: Semana 3
-            const baseDate = new Date(2026, 9, 26); // Lunes de Semana 3
-            const today = new Date();
+            const currentMonday = getMondayOfCurrentRealWeek();
+            const diffTime = currentMonday - anchorDate;
+            const diffWeeks = Math.round(diffTime / (1000 * 60 * 60 * 24 * 7));
 
-            const diffTime = today - baseDate;
-            const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
-
-            let currentWeek = ((3 + diffWeeks - 1) % 4) + 1;
+            let currentWeek = ((anchorWeek + diffWeeks - 1) % 4) + 1;
             if (currentWeek <= 0) currentWeek += 4;
 
             let nextWeek = (currentWeek % 4) + 1;
+            return { currentWeek, nextWeek };
+        }
 
-            return {currentWeek, nextWeek};
+        function getMondayForWeekNumber(targetWeek) {
+            const realCurrentMonday = getMondayOfCurrentRealWeek();
+            const { currentWeek } = calculateCurrentWeek();
+
+            let weekDiff = targetWeek - currentWeek;
+
+            if (weekDiff > 2) weekDiff -= 4;
+            if (weekDiff < -2) weekDiff += 4;
+
+            const targetMonday = new Date(realCurrentMonday);
+            targetMonday.setDate(realCurrentMonday.getDate() + (weekDiff * 7));
+            return targetMonday;
+        }
+
+        function updateHeaderDates(selectedWeek) {
+            const monday = getMondayForWeekNumber(parseInt(selectedWeek));
+
+            for (let i = 0; i < 5; i++) {
+                const dayDate = new Date(monday);
+                dayDate.setDate(monday.getDate() + i);
+
+                // Formato en español: "03 de noviembre de 2026"
+                const options = { day: '2-digit', month: 'long', year: 'numeric' };
+                const formattedDate = dayDate.toLocaleDateString('es-ES', options);
+
+                document.getElementById(`date-${i + 1}`).textContent = formattedDate;
+            }
         }
 
         function init() {
@@ -386,18 +457,24 @@
                 nameFilter.appendChild(option);
             });
 
-            const {currentWeek, nextWeek} = calculateCurrentWeek();
+            const { currentWeek, nextWeek } = calculateCurrentWeek();
             document.getElementById('weekSelect').value = currentWeek;
 
             const banner = document.getElementById('weekBanner');
             banner.innerHTML = `📌 <strong>Semana Activa:</strong> Actualmente estás viendo la <strong>Semana ${currentWeek}</strong>. El próximo lunes el sistema avanzará automáticamente a la <strong>Semana ${nextWeek}</strong>.`;
 
             highlightTodayColumn();
+            onWeekChange();
+        }
+
+        function onWeekChange() {
+            const selectedWeek = document.getElementById('weekSelect').value;
+            updateHeaderDates(selectedWeek);
             updateView();
         }
 
         function highlightTodayColumn() {
-            const jsDay = new Date().getDay(); // 1 = Lunes, ..., 5 = Viernes
+            const jsDay = new Date().getDay();
             if (jsDay >= 1 && jsDay <= 5) {
                 const th = document.getElementById(`th-${jsDay}`);
                 if (th) th.classList.add('today-col');
@@ -426,10 +503,15 @@
 
                 person.days.forEach((dayType, index) => {
                     const cssClass = dayType === 'Home Office' ? 'home-office' : 'presencial';
-                    const jsDay = new Date().getDay();
-                    const isToday = (index + 1) === jsDay ? 'today-col' : '';
 
-                    html += `<td class="${isToday}"><span class="badge ${cssClass}">${dayType}</span></td>`;
+                    const { currentWeek } = calculateCurrentWeek();
+                    const isSelectedCurrent = parseInt(selectedWeek) === currentWeek;
+                    const jsDay = new Date().getDay();
+                    const isTodayCell = isSelectedCurrent && ((index + 1) === jsDay);
+
+                    const cellClass = isTodayCell ? 'today-col' : '';
+
+                    html += `<td class="${cellClass}"><span class="badge ${cssClass}">${dayType}</span></td>`;
 
                     if (dayType === 'Presencial') {
                         totals[index]++;
