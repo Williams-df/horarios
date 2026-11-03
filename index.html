@@ -216,6 +216,13 @@
             background-color: var(--presencial-bg);
             color: var(--presencial-text);
             border-color: var(--presencial-border);
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .presencial:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(235, 39, 119, 0.3);
         }
 
         .today-col {
@@ -239,6 +246,211 @@
 
         tfoot td:first-child {
             text-align: left;
+        }
+
+        /* Estilos del Modal/Card para Presencial */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 14, 26, 0.85);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .location-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 550px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            position: relative;
+            animation: modalFadeIn 0.25s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h2 {
+            font-size: 1.2rem;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-header .date-info {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-weight: normal;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 4px;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: var(--accent-yellow);
+        }
+
+        .card-body {
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .info-box {
+            background-color: var(--sidebar-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 0.88rem;
+            color: var(--text-main);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .info-box strong {
+            color: var(--accent-yellow);
+        }
+
+        .external-map-link {
+            background-color: var(--accent-yellow);
+            color: #111625;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .external-map-link:hover {
+            background-color: var(--accent-yellow-hover);
+        }
+
+        .section-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 200px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .photo-container {
+            width: 100%;
+            min-height: 220px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+            background-color: var(--sidebar-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .place-photo {
+            width: 100%;
+            max-height: 320px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-fallback {
+            padding: 30px 20px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .photo-fallback span {
+            display: block;
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .card-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: flex-end;
+            background-color: #151d30;
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+        }
+
+        .btn-secondary {
+            background-color: var(--sidebar-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-yellow);
+            color: var(--accent-yellow);
         }
 
         footer {
@@ -336,6 +548,55 @@
         </footer>
     </div>
 
+    <!-- Modal Card de Ubicación y Lugar de Trabajo Presencial -->
+    <div id="locationModal" class="modal-overlay" onclick="closeModalOnOverlay(event)">
+        <div class="location-card">
+            <div class="card-header">
+                <div>
+                    <h2 id="modalPersonName">Asistencia Presencial</h2>
+                    <div class="card-header date-info" id="modalDateInfo">--</div>
+                </div>
+                <button class="close-btn" onclick="closeLocationModal()">&times;</button>
+            </div>
+
+            <div class="card-body">
+                <div class="info-box">
+                    <div>
+                        📍 <strong>Edificio Paladium:</strong> Zona 10, Ciudad de Guatemala.
+                    </div>
+                    <a href="https://maps.app.goo.gl/cipq9QPQrBdF36qF7" target="_blank" class="external-map-link">Abrir
+                        en Maps ↗</a>
+                </div>
+
+                <div>
+                    <div class="section-title">🗺️ Mapa Exacto (Coordenadas Precisas)</div>
+                    <div class="map-container">
+                        <iframe src="https://maps.google.com/maps?q=14.595219,-90.513809&z=17&output=embed"
+                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="section-title">📸 Fotografía del Lugar de Trabajo</div>
+                    <div class="photo-container" id="photoWrapper">
+                        <img id="placeImage" class="place-photo" src="" alt="Foto del lugar"
+                            onerror="handleImageError()">
+                        <div id="photoFallback" class="photo-fallback" style="display: none;">
+                            <span>🏢</span>
+                            <p>Imagen no encontrada en la ruta:</p>
+                            <code id="fallbackPath" style="color: var(--accent-yellow); font-size: 0.78rem;"></code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <button class="btn-secondary" onclick="closeLocationModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Mapeo corregido desde la hoja 'HorariosFinales'
         const schedules = {
@@ -393,6 +654,7 @@
             ]
         };
 
+        const dayNames = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
         const anchorDate = new Date(2026, 9, 26);
         const anchorWeek = 3;
 
@@ -511,7 +773,12 @@
 
                     const cellClass = isTodayCell ? 'today-col' : '';
 
-                    html += `<td class="${cellClass}"><span class="badge ${cssClass}">${dayType}</span></td>`;
+                    let clickAttr = '';
+                    if (dayType === 'Presencial') {
+                        clickAttr = `onclick="openLocationModal('${person.name}', ${index})" title="Ver mapa y lugar de trabajo"`;
+                    }
+
+                    html += `<td class="${cellClass}"><span class="badge ${cssClass}" ${clickAttr}>${dayType}</span></td>`;
 
                     if (dayType === 'Presencial') {
                         totals[index]++;
@@ -526,6 +793,49 @@
                 document.getElementById(`tot-${i + 1}`).textContent = totals[i];
             }
         }
+
+        function openLocationModal(personName, dayIndex) {
+            const dateText = document.getElementById(`date-${dayIndex + 1}`).textContent;
+            const dayName = dayNames[dayIndex];
+
+            document.getElementById('modalPersonName').textContent = `Lugar de ${personName}`;
+            document.getElementById('modalDateInfo').textContent = `${dayName}, ${dateText}`;
+
+            const formattedName = personName.trim().replace(/\s+/g, '_');
+            const imagePath = `imagenes/lugares/${formattedName}.jpg`;
+
+            const imgElement = document.getElementById('placeImage');
+            const fallbackElement = document.getElementById('photoFallback');
+            const fallbackPath = document.getElementById('fallbackPath');
+
+            imgElement.style.display = 'block';
+            fallbackElement.style.display = 'none';
+            imgElement.src = imagePath;
+            fallbackPath.textContent = imagePath;
+
+            document.getElementById('locationModal').classList.add('active');
+        }
+
+        function handleImageError() {
+            document.getElementById('placeImage').style.display = 'none';
+            document.getElementById('photoFallback').style.display = 'block';
+        }
+
+        function closeLocationModal() {
+            document.getElementById('locationModal').classList.remove('active');
+        }
+
+        function closeModalOnOverlay(event) {
+            if (event.target.id === 'locationModal') {
+                closeLocationModal();
+            }
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeLocationModal();
+            }
+        });
 
         window.onload = init;
     </script>
